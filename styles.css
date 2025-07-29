@@ -76,7 +76,7 @@ button {
     overflow-x: auto;
     border: 1px solid #ddd;
     height: auto;
-    max-height: 800px;
+    max-height: 1000px; /* Erhöht für bessere Sichtbarkeit */
     overflow-y: auto;
 }
 
@@ -102,7 +102,7 @@ button {
     flex: 1 0 150px;
     position: relative;
     border-right: 1px solid #ddd;
-    min-height: 720px; /* Mindesthöhe */
+    min-height: 1000px; /* Erhöht für bessere Sichtbarkeit */
 }
 
 .hour-lines {

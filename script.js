@@ -9,16 +9,44 @@ const calendarDays = [
     '2025-08-06', '2025-08-07', '2025-08-08', '2025-08-09', '2025-08-10'
 ];
 
-// Daten in localStorage speichern
-let users = JSON.parse(localStorage.getItem('users')) || [];
-let fixedActivities = JSON.parse(localStorage.getItem('fixedActivities')) || [];
-let proposals = JSON.parse(localStorage.getItem('proposals')) || [];
+// Globale Daten-Arrays
+let users = [];
+let fixedActivities = [];
+let proposals = [];
 
-function saveData() {
+// Initiale Daten laden
+async function loadInitialData() {
+    try {
+        const response = await fetch('data.json');
+        const data = await response.json();
+        users = data.users || [];
+        fixedActivities = data.fixedActivities || [];
+        proposals = data.proposals || [];
+    } catch (error) {
+        console.log('data.json nicht gefunden, starte mit leeren Daten.');
+        users = [];
+        fixedActivities = [];
+        proposals = [];
+    }
+    saveToLocalStorage();
+    updateCalendar();
+    updateActivitiesList();
+}
+
+function saveToLocalStorage() {
     localStorage.setItem('users', JSON.stringify(users));
     localStorage.setItem('fixedActivities', JSON.stringify(fixedActivities));
     localStorage.setItem('proposals', JSON.stringify(proposals));
 }
+
+function loadFromLocalStorage() {
+    users = JSON.parse(localStorage.getItem('users')) || [];
+    fixedActivities = JSON.parse(localStorage.getItem('fixedActivities')) || [];
+    proposals = JSON.parse(localStorage.getItem('proposals')) || [];
+}
+
+// Initiale Ladung
+loadInitialData();
 
 function verifyCode() {
     const code = document.getElementById('code-input').value.trim();
@@ -36,7 +64,7 @@ function verifyCode() {
         document.getElementById('admin-panel').style.display = 'none';
         document.getElementById('login-section').style.display = 'none';
     } else {
-        alert('Ungültiger Code! Stelle sicher, dass der Code existiert und 4-stellig ist. Überprüfe im Browser-Console: console.log(localStorage.getItem("users"));');
+        alert('Ungültiger Code! Stelle sicher, dass der Code existiert.');
     }
     updateCalendar();
     updateActivitiesList();
@@ -57,7 +85,7 @@ function addUser() {
     if (name) {
         const code = Math.floor(1000 + Math.random() * 9000).toString();
         users.push({ name, code });
-        saveData();
+        saveToLocalStorage();
         loadUserList();
     }
 }
@@ -75,7 +103,7 @@ function loadUserList() {
             const newName = prompt('Neuen Namen eingeben:', user.name);
             if (newName) {
                 user.name = newName;
-                saveData();
+                saveToLocalStorage();
                 loadUserList();
             }
         };
@@ -87,7 +115,7 @@ function loadUserList() {
             const newCode = prompt('Neuen 4-stelligen Code eingeben:', user.code);
             if (newCode && newCode.length === 4) {
                 user.code = newCode;
-                saveData();
+                saveToLocalStorage();
                 loadUserList();
             }
         };
@@ -98,7 +126,7 @@ function loadUserList() {
         deleteBtn.onclick = () => {
             if (confirm(`Jugendlichen ${user.name} wirklich löschen?`)) {
                 users.splice(index, 1);
-                saveData();
+                saveToLocalStorage();
                 loadUserList();
             }
         };
@@ -125,20 +153,16 @@ function loadAdminProposals() {
         acceptBtn.textContent = 'Annehmen';
         acceptBtn.onclick = () => {
             const duration = parseInt(prompt('Dauer in Minuten eingeben (z.B. 120 für Anfahrt etc.):')) || 60;
-            const id = Date.now();
-            fixedActivities.push({ id, day: proposal.day, time: proposal.time, duration, name: proposal.name });
-            proposals = proposals.filter(p => p.id !== proposal.id);
-            saveData();
-            updateCalendar();
-            updateActivitiesList();
+            fixedActivities.push({ day: proposal.day, time: proposal.time, duration, name: proposal.name });
+            proposals = proposals.filter(p => p !== proposal);
+            saveToLocalStorage();
             loadAdminProposals();
-            loadEditActivities();
         };
         const rejectBtn = document.createElement('button');
         rejectBtn.textContent = 'Ablehnen';
         rejectBtn.onclick = () => {
-            proposals = proposals.filter(p => p.id !== proposal.id);
-            saveData();
+            proposals = proposals.filter(p => p !== proposal);
+            saveToLocalStorage();
             loadAdminProposals();
         };
         div.appendChild(acceptBtn);
@@ -150,7 +174,7 @@ function loadAdminProposals() {
 function loadEditActivities() {
     const container = document.getElementById('edit-activities');
     container.innerHTML = '';
-    fixedActivities.forEach(activity => {
+    fixedActivities.forEach((activity, index) => {
         const div = document.createElement('div');
         div.textContent = `${activity.day} ${activity.time} (${activity.duration} Min.): ${activity.name}`;
         const editBtn = document.createElement('button');
@@ -162,19 +186,15 @@ function loadEditActivities() {
             if (newTime) activity.time = newTime;
             if (newDuration) activity.duration = parseInt(newDuration) || activity.duration;
             if (newName) activity.name = newName;
-            saveData();
-            updateCalendar();
-            updateActivitiesList();
+            saveToLocalStorage();
             loadEditActivities();
         };
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'Löschen';
         deleteBtn.onclick = () => {
             if (confirm('Aktivität löschen?')) {
-                fixedActivities = fixedActivities.filter(a => a.id !== activity.id);
-                saveData();
-                updateCalendar();
-                updateActivitiesList();
+                fixedActivities.splice(index, 1);
+                saveToLocalStorage();
                 loadEditActivities();
             }
         };
@@ -189,11 +209,8 @@ function submitProposal() {
     const time = document.getElementById('proposal-time').value.trim();
     const name = document.getElementById('proposal-name').value.trim();
     if (day && time && name) {
-        const id = Date.now();
-        proposals.push({ id, day, time, name, votesYes: 0, votesNo: 0, votedUsers: [] });
-        saveData();
-        updateCalendar();
-        updateActivitiesList();
+        proposals.push({ day, time, name, votesYes: 0, votesNo: 0, votedUsers: [] });
+        saveToLocalStorage();
     } else {
         alert('Bitte alle Felder ausfüllen!');
     }
@@ -205,11 +222,8 @@ function addFixedActivity() {
     const duration = parseInt(document.getElementById('activity-duration').value.trim()) || 60;
     const name = document.getElementById('activity-name').value.trim();
     if (day && time && name) {
-        const id = Date.now();
-        fixedActivities.push({ id, day, time, duration, name });
-        saveData();
-        updateCalendar();
-        updateActivitiesList();
+        fixedActivities.push({ day, time, duration, name });
+        saveToLocalStorage();
         loadEditActivities();
     } else {
         alert('Bitte alle Felder ausfüllen!');
@@ -272,7 +286,7 @@ function updateCalendar() {
             dayColumn.appendChild(div);
         });
 
-        // Vorschläge (Annahme: 60 Min Dauer für Anzeige, um sichtbar zu sein)
+        // Vorschläge
         proposals.filter(p => p.day === day).forEach(proposal => {
             const div = createProposalElement(proposal);
             const startMin = parseTime(proposal.time);
@@ -305,8 +319,10 @@ function createActivityElement(activity, className) {
     const div = document.createElement('div');
     div.className = className;
     div.textContent = `${activity.time} (${activity.duration} Min.): ${activity.name}`;
-    div.dataset.id = activity.id;
-    div.dataset.type = 'fixed';
+    div.dataset.day = activity.day;
+    div.dataset.time = activity.time;
+    div.dataset.duration = activity.duration;
+    div.dataset.name = activity.name;
     if (isAdmin) {
         div.draggable = true;
         div.addEventListener('dragstart', dragStart);
@@ -318,8 +334,9 @@ function createProposalElement(proposal, draggable = false) {
     const div = document.createElement('div');
     div.className = 'proposal' + (draggable && isAdmin ? ' draggable' : '');
     div.textContent = `${proposal.time}: ${proposal.name} (Ja: ${proposal.votesYes}, Nein: ${proposal.votesNo})`;
-    div.dataset.id = proposal.id;
-    div.dataset.type = 'proposal';
+    div.dataset.day = proposal.day;
+    div.dataset.time = proposal.time;
+    div.dataset.name = proposal.name;
     if (draggable && isAdmin) {
         div.draggable = true;
         div.addEventListener('dragstart', dragStart);
@@ -340,7 +357,7 @@ function createProposalElement(proposal, draggable = false) {
             proposal.votesNo++;
         }
         proposal.votedUsers.push(currentUserCode);
-        saveData();
+        saveToLocalStorage();
         updateCalendar();
         updateActivitiesList();
     };
@@ -348,10 +365,15 @@ function createProposalElement(proposal, draggable = false) {
 }
 
 function dragStart(e) {
-    e.dataTransfer.setData('text/plain', JSON.stringify({
-        id: e.target.dataset.id,
-        type: e.target.dataset.type
-    }));
+    const data = {
+        id: e.target.dataset.id || Date.now(),
+        type: e.target.className.includes('fixed-activity') ? 'fixed' : 'proposal',
+        day: e.target.dataset.day,
+        time: e.target.dataset.time,
+        duration: e.target.dataset.duration || 60,
+        name: e.target.dataset.name
+    };
+    e.dataTransfer.setData('text/plain', JSON.stringify(data));
     setTimeout(() => {
         e.target.classList.add('dragging');
     }, 0);
@@ -375,21 +397,13 @@ function drop(e) {
     const dropMinute = dropMin % 60;
     const newTime = `${String(dropHour).padStart(2, '0')}:${String(dropMinute).padStart(2, '0')}`;
 
-    let item;
+    const updatedItem = { day, time: newTime, duration: data.duration, name: data.name };
     if (data.type === 'fixed') {
-        item = fixedActivities.find(a => a.id == data.id);
-        if (item) {
-            item.day = day;
-            item.time = newTime;
-        }
+        fixedActivities = fixedActivities.map(a => a.id === data.id ? updatedItem : a);
     } else if (data.type === 'proposal') {
-        item = proposals.find(p => p.id == data.id);
-        if (item) {
-            item.day = day;
-            item.time = newTime;
-        }
+        proposals = proposals.map(p => p.id === data.id ? updatedItem : p);
     }
-    saveData();
+    saveToLocalStorage();
     updateCalendar();
     updateActivitiesList();
 }
@@ -399,7 +413,3 @@ document.getElementById('scale-slider').addEventListener('input', (e) => {
     hourHeight = parseInt(e.target.value);
     updateCalendar();
 });
-
-// Initiale Ladung
-updateCalendar();
-updateActivitiesList();
