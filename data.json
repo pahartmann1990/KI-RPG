@@ -1,17 +1,12 @@
 {
-  "users": [
-    {
-      "name": "Test-User",
-      "code": "1234"
-    }
+  "characters": [
+    { "id": 1, "name": "Laura", "tags": ["red hair", "blue eyes"], "portrait_url": "" },
+    { "id": 2, "name": "Alex", "tags": ["black jacket", "glasses"], "portrait_url": "" },
+    { "id": 3, "name": "Tim", "tags": ["green hat", "freckles"], "portrait_url": "" }
   ],
-  "fixedActivities": [
-    {
-      "day": "2025-08-02",
-      "time": "10:00",
-      "duration": 120,
-      "name": "Schwimmen (Beispiel)"
-    }
-  ],
-  "proposals": []
+  "worldState": {
+    "flags": {},
+    "inventory": [],
+    "relations": {}
+  }
 }
