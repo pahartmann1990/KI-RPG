@@ -1,95 +1,17 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kinderfreizeit Kalender - 2. bis 10. August 2025</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image RPG Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Kinderfreizeit Kalender: 2. bis 10. August 2025</h1>
-    
-    <div id="login-section">
-        <label for="code-input">Code eingeben (4-stellig für Jugendliche, 6-stellig für Admin):</label>
-        <input type="text" id="code-input" maxlength="6">
-        <button onclick="verifyCode()">Verifizieren</button>
-    </div>
-    
-    <div id="admin-panel" style="display: none;">
-        <h2>Admin-Bereich (Patrick Hartmann)</h2>
-        <button onclick="logout()">Logout</button>
-        
-        <!-- Bereich für Jugendliche verwalten -->
-        <h3>Jugendliche verwalten</h3>
-        <input type="text" id="new-user-name" placeholder="Name des Jugendlichen">
-        <button onclick="addUser()">Neuen Jugendlichen hinzufügen (Code wird generiert)</button>
-        <ul id="user-list"></ul>
-        
-        <!-- Bereich für finale Entscheidungen -->
-        <h3>Aktivitäten finalisieren</h3>
-        <p>Hier kannst du Vorschläge basierend auf Abstimmungen und Zeitplänen (z.B. Anfahrt, Dauer) annehmen oder ablehnen.</p>
-        <div id="admin-proposals"></div>
-        
-        <!-- Neue feste Aktivität hinzufügen -->
-        <h3>Neue feste Aktivität hinzufügen</h3>
-        <select id="activity-day">
-            <option value="2025-08-02">Samstag, 2. August</option>
-            <option value="2025-08-03">Sonntag, 3. August</option>
-            <option value="2025-08-04">Montag, 4. August</option>
-            <option value="2025-08-05">Dienstag, 5. August</option>
-            <option value="2025-08-06">Mittwoch, 6. August</option>
-            <option value="2025-08-07">Donnerstag, 7. August</option>
-            <option value="2025-08-08">Freitag, 8. August</option>
-            <option value="2025-08-09">Samstag, 9. August</option>
-            <option value="2025-08-10">Sonntag, 10. August</option>
-        </select>
-        <input type="text" id="activity-time" placeholder="Uhrzeit (z.B. 14:00)">
-        <input type="text" id="activity-duration" placeholder="Dauer in Minuten (z.B. 120)">
-        <input type="text" id="activity-name" placeholder="Aktivität (z.B. Schwimmen)">
-        <button onclick="addFixedActivity()">Hinzufügen</button>
-        
-        <!-- Aktivitäten bearbeiten -->
-        <h3>Feste Aktivitäten bearbeiten</h3>
-        <div id="edit-activities"></div>
-    </div>
-    
-    <div id="user-panel" style="display: none;">
-        <h2>Willkommen! (Jugendlicher-Bereich)</h2>
-        <button onclick="logout()">Logout</button>
-        <!-- Vorschlag einreichen -->
-        <h3>Vorschlag einreichen</h3>
-        <select id="proposal-day">
-            <option value="2025-08-02">Samstag, 2. August</option>
-            <option value="2025-08-03">Sonntag, 3. August</option>
-            <option value="2025-08-04">Montag, 4. August</option>
-            <option value="2025-08-05">Dienstag, 5. August</option>
-            <option value="2025-08-06">Mittwoch, 6. August</option>
-            <option value="2025-08-07">Donnerstag, 7. August</option>
-            <option value="2025-08-08">Freitag, 8. August</option>
-            <option value="2025-08-09">Samstag, 9. August</option>
-            <option value="2025-08-10">Sonntag, 10. August</option>
-        </select>
-        <input type="text" id="proposal-time" placeholder="Uhrzeit (z.B. 15:00)">
-        <input type="text" id="proposal-name" placeholder="Vorschlag (z.B. Eis essen)">
-        <button onclick="submitProposal()">Einreichen</button>
-    </div>
-    
-    <div id="main-content" class="split-view">
-        <div id="calendar-section" class="left">
-            <h2>Kalender (Links)</h2>
-            <p>Feste Aktivitäten sind blau, Vorschläge gelb. Klicke auf Vorschläge, um abzustimmen (nach Verifizierung). Als Admin kannst du Aktivitäten per Drag-and-Drop verschieben.</p>
-            <label for="scale-slider">Kalender-Skala (px pro Stunde): </label>
-            <input type="range" id="scale-slider" min="20" max="100" value="30">
-            <div id="calendar" class="calendar-wrapper"></div>
-        </div>
-        
-        <div id="activities-section" class="right">
-            <h2>Aktivitäten & Vorschläge (Rechts)</h2>
-            <p>Ziehe Aktivitäten in den Kalender (Drag-and-Drop, nur für Admin).</p>
-            <div id="activities-list"></div>
-        </div>
-    </div>
-    
-    <script src="script.js"></script>
+<body class="bg-gray-900 text-white p-4">
+  <h1 class="text-2xl mb-4">Image RPG Demo</h1>
+  <div id="story" class="mb-4"></div>
+  <div id="images" class="flex flex-wrap gap-2 mb-4"></div>
+  <input id="action" class="text-black p-2" placeholder="Your action">
+  <button id="send" class="bg-blue-500 px-4 py-2 ml-2">Send</button>
+  <script src="script.js"></script>
 </body>
 </html>
