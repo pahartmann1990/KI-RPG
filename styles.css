@@ -3,7 +3,7 @@ body {
     max-width: 900px;
     margin: 0 auto;
     padding: 20px;
-    background: linear-gradient(to bottom, #f0f9ff, #ffffff); /* Leichter Gradient für Modernität */
+    background: linear-gradient(to bottom, #f0f9ff, #ffffff);
     color: #333;
 }
 
@@ -29,6 +29,41 @@ h2 {
     margin-bottom: 15px;
 }
 
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tab-button:hover, .tab-button.active {
+    background-color: #4CAF50;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tab-content {
+    display: none;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tab-content.active {
+    display: block;
+}
+
 #month-view {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -51,53 +86,6 @@ h2 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-#day-details table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 10px;
-}
-
-#day-details th, #day-details td {
-    padding: 12px;
-    text-align: left;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-#day-details th {
-    background-color: #4CAF50;
-    color: white;
-    font-weight: 500;
-}
-
-a {
-    color: #4CAF50;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-a:hover {
-    text-decoration: underline;
-    color: #388E3C;
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.2s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-button:hover {
-    background-color: #388E3C;
-}
-
 #shopping-details ul {
     list-style: none;
     padding: 0;
@@ -111,19 +99,35 @@ button:hover {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.recipe-details {
+.recipe-category {
+    margin-bottom: 20px;
+}
+
+.recipe-category h3 {
+    color: #388E3C;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.recipe-item {
     background: white;
     padding: 15px;
+    margin-bottom: 10px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+
+.recipe-item:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 600px) {
-    #month-view {
-        grid-template-columns: 1fr;
+    .tabs {
+        flex-direction: column;
     }
-    
-    header {
-        padding: 15px;
+    .tab-button {
+        width: 100%;
+        margin-bottom: 10px;
     }
 }
