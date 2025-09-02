@@ -1,0 +1,17 @@
+{
+  "name": "ki-rpg",
+  "version": "1.0.0",
+  "description": "Dieses Projekt ist ein einfaches MVP eines textbasierten Rollenspiels mit Bildausgabe.",
+  "main": "server.js",
+  "scripts": {
+    "test": "node -e \"console.log('no tests')\"",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "fastify": "^4.28.1"
+  }
+}
