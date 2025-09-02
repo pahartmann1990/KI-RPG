@@ -1,17 +1,15 @@
 {
-  "users": [
-    {
-      "name": "Test-User",
-      "code": "1234"
-    }
+  "characters": [
+    {"id": "laura", "name": "Laura", "tags": ["mutig", "rote Haare", "grüne Augen"], "portrait": "https://via.placeholder.com/128?text=Laura"},
+    {"id": "alex", "name": "Alex", "tags": ["clever", "blonde Haare"], "portrait": "https://via.placeholder.com/128?text=Alex"},
+    {"id": "tim", "name": "Tim", "tags": ["lustig", "braune Haare"], "portrait": "https://via.placeholder.com/128?text=Tim"}
   ],
-  "fixedActivities": [
-    {
-      "day": "2025-08-02",
-      "time": "10:00",
-      "duration": 120,
-      "name": "Schwimmen (Beispiel)"
-    }
-  ],
-  "proposals": []
+  "scenes": [
+    {"id": 1, "text": "Die Reise beginnt im kleinen Dorf. Laura, Alex und Tim treffen sich am Brunnen.", "image": "https://via.placeholder.com/512?text=Szene+1"},
+    {"id": 2, "text": "Sie betreten den dunklen Wald, der von geheimnisvollen Geräuschen erfüllt ist.", "image": "https://via.placeholder.com/512?text=Szene+2"},
+    {"id": 3, "text": "Ein alter Wanderer warnt sie vor einer nahen Gefahr, bietet aber Hilfe an.", "image": "https://via.placeholder.com/512?text=Szene+3"},
+    {"id": 4, "text": "Am Flussufer entdecken sie eine Brücke, die von einem Troll bewacht wird.", "image": "https://via.placeholder.com/512?text=Szene+4"},
+    {"id": 5, "text": "Nach der Überquerung erreichen sie eine verlassene Ruine voller Rätsel.", "image": "https://via.placeholder.com/512?text=Szene+5"},
+    {"id": 6, "text": "Schließlich finden sie den Schatz und feiern ihren Erfolg.", "image": "https://via.placeholder.com/512?text=Szene+6"}
+  ]
 }
