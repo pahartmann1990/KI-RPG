@@ -1,146 +1,71 @@
 body {
     font-family: Arial, sans-serif;
-    max-width: 1200px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    background-color: #f9f9f9;
 }
 
-h1, h2, h3 {
+header {
     text-align: center;
-}
-
-#login-section, #admin-panel, #user-panel {
-    margin-bottom: 20px;
+    background-color: #4CAF50;
+    color: white;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
 }
 
-input, select {
-    margin: 5px;
-    padding: 5px;
+h1, h2 {
+    color: #333;
+}
+
+#month-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.week-button {
+    background-color: #dff0d8;
+    border: 1px solid #3c763d;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#day-details table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#day-details th, #day-details td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#day-details th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 button {
-    padding: 5px 10px;
-    margin: 5px;
-}
-
-.fixed-activity {
-    background-color: #87CEEB; /* Blau für feste Aktivitäten */
-    padding: 5px;
-    border-radius: 5px;
-    cursor: move;
-    position: absolute;
-    width: 95%;
-    z-index: 2;
-}
-
-.proposal {
-    background-color: #FFFF99; /* Gelb für Vorschläge */
-    padding: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-    position: absolute;
-    width: 95%;
-    z-index: 2;
-}
-
-#user-list {
-    list-style-type: none;
-}
-
-#user-list li {
-    margin: 5px 0;
-}
-
-.split-view {
-    display: flex;
-    justify-content: space-between;
-}
-
-.left {
-    width: 60%; /* Mehr Platz für Kalender */
-    border-right: 1px solid #ccc;
-    padding-right: 10px;
-}
-
-.right {
-    width: 38%;
-    padding-left: 10px;
-}
-
-.calendar-wrapper {
-    display: flex;
-    flex-direction: column;
-    overflow-x: auto;
-    border: 1px solid #ddd;
-    height: auto;
-    max-height: 1000px; /* Erhöht für bessere Sichtbarkeit */
-    overflow-y: auto;
-}
-
-.calendar-header {
-    display: flex;
-}
-
-.day-header {
-    flex: 1 0 150px;
-    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
     padding: 10px;
-    background-color: #f0f0f0;
-    border-right: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+    margin-top: 10px;
+    cursor: pointer;
 }
 
-.calendar-grid {
-    display: flex;
-    position: relative;
-}
-
-.day-column {
-    flex: 1 0 150px;
-    position: relative;
-    border-right: 1px solid #ddd;
-    min-height: 1000px; /* Erhöht für bessere Sichtbarkeit */
-}
-
-.hour-lines {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.hour-line {
-    border-bottom: 1px solid #ddd; /* Sichtbarer machen */
-    position: relative;
-}
-
-.hour-label {
-    position: absolute;
-    top: -12px;
-    left: 5px;
-    font-size: 12px;
-    color: #666;
-}
-
-/* Drag-and-Drop Styles */
-.draggable {
-    cursor: move;
-}
-
-.draggable.dragging {
-    opacity: 0.5;
-}
-
-.dropzone {
-    height: 100%;
-}
-
-#edit-activities div {
-    margin: 10px 0;
-    padding: 5px;
-    border: 1px solid #ccc;
+@media (max-width: 600px) {
+    #month-view {
+        grid-template-columns: 1fr;
+    }
 }
