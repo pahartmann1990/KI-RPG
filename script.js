@@ -3,84 +3,94 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             buildCalendar(data);
+            buildShoppingLists(data);
+            buildRecipes(data);
+            openTab('calendar'); // Standard-Tab beim Laden
         })
         .catch(error => console.error('Fehler beim Laden der Daten:', error));
 });
 
+function openTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active');
+    });
+    document.getElementById(tabName).classList.add('active');
+    document.querySelector(`.tab-button[onclick="openTab('${tabName}')"]`).classList.add('active');
+}
+
 function buildCalendar(data) {
     const monthView = document.getElementById('month-view');
-    monthView.innerHTML = ''; // Leeren
+    monthView.innerHTML = '';
     data.weeks.forEach((week, index) => {
         const button = document.createElement('div');
         button.classList.add('week-button');
         button.textContent = `Woche ${index + 1} (${week.startDate} - ${week.endDate})`;
-        button.onclick = () => showWeek(week);
+        button.onclick = () => showWeekDetails(week);
         monthView.appendChild(button);
     });
 }
 
-function showWeek(week) {
-    document.getElementById('calendar').style.display = 'none';
-    const dayPlan = document.getElementById('day-plan');
-    dayPlan.style.display = 'block';
-    
-    const dayDetails = document.getElementById('day-details');
-    dayDetails.innerHTML = '<table><tr><th>Tag</th><th>Mittag (einfach, vorbereitbar)</th><th>Abend</th></tr>';
-    
-    week.days.forEach(day => {
-        const row = `<tr>
-            <td>${day.tag}</td>
-            <td><a href="#" onclick="showRecipe('${day.mittag.id}', event)">${day.mittag.name}</a></td>
-            <td><a href="#" onclick="showRecipe('${day.abend.id}', event)">${day.abend.name}</a></td>
-        </tr>`;
-        dayDetails.innerHTML += row;
-    });
-    dayDetails.innerHTML += '</table>';
-    
-    // Button für Einkaufsliste
-    const shoppingButton = document.createElement('button');
-    shoppingButton.textContent = 'Einkaufsliste anzeigen';
-    shoppingButton.onclick = () => showShopping(week.shopping);
-    dayDetails.appendChild(shoppingButton);
-    
-    document.getElementById('back-to-calendar').onclick = () => {
-        dayPlan.style.display = 'none';
-        document.getElementById('calendar').style.display = 'block';
-    };
+function showWeekDetails(week) {
+    // Hier könnte man eine detaillierte Woche anzeigen, z.B. in einem Modal oder separaten Bereich
+    alert(`Details für Woche ${week.startDate} - ${week.endDate}`);
 }
 
-function showShopping(shopping) {
-    document.getElementById('day-plan').style.display = 'none';
-    const shoppingSection = document.getElementById('shopping-list');
-    shoppingSection.style.display = 'block';
-    
+function buildShoppingLists(data) {
     const shoppingDetails = document.getElementById('shopping-details');
-    shoppingDetails.innerHTML = '<ul>';
-    let total = 0;
-    shopping.items.forEach(item => {
-        shoppingDetails.innerHTML += `<li>${item.name} (${item.menge}): ${item.preis} €</li>`;
-        total += parseFloat(item.preis);
+    shoppingDetails.innerHTML = '<h3>Einkaufslisten nach Woche</h3>';
+    data.weeks.forEach((week, index) => {
+        const weekSection = document.createElement('div');
+        weekSection.innerHTML = `<h4>Woche ${index + 1} (${week.startDate} - ${week.endDate})</h4><ul>`;
+        let total = 0;
+        week.shopping.items.forEach(item => {
+            weekSection.innerHTML += `<li>${item.name} (${item.menge}): ${item.preis} €</li>`;
+            total += parseFloat(item.preis);
+        });
+        weekSection.innerHTML += `</ul><p>Gesamtkosten: ${total.toFixed(2)} €</p>`;
+        shoppingDetails.appendChild(weekSection);
     });
-    shoppingDetails.innerHTML += '</ul>';
-    document.getElementById('total-cost').textContent = total.toFixed(2);
-    
-    document.getElementById('back-to-day').onclick = () => {
-        shoppingSection.style.display = 'none';
-        document.getElementById('day-plan').style.display = 'block';
-    };
 }
 
-function showRecipe(recipeId, event) {
-    event.preventDefault(); // Verhindert Standard-Link-Verhalten
+function buildRecipes(data) {
+    const recipeDetails = document.getElementById('recipe-details');
+    recipeDetails.innerHTML = '<h3>Rezepte nach Tag</h3>';
+    const recipesByDay = {};
+
+    data.weeks.forEach(week => {
+        week.days.forEach(day => {
+            if (!recipesByDay[day.tag]) recipesByDay[day.tag] = [];
+            recipesByDay[day.tag].push(day.mittag);
+            recipesByDay[day.tag].push(day.abend);
+        });
+    });
+
+    for (const [day, recipes] of Object.entries(recipesByDay)) {
+        const category = document.createElement('div');
+        category.classList.add('recipe-category');
+        category.innerHTML = `<h3>${day}</h3>`;
+        const recipeList = document.createElement('div');
+        recipes.forEach(recipe => {
+            const recipeItem = document.createElement('div');
+            recipeItem.classList.add('recipe-item');
+            recipeItem.innerHTML = `<strong>${recipe.name}</strong> (Kalorien: ${data.recipes.find(r => r.id === recipe.id).kalorien})`;
+            recipeItem.onclick = () => showRecipeDetails(recipe.id);
+            recipeList.appendChild(recipeItem);
+        });
+        category.appendChild(recipeList);
+        recipeDetails.appendChild(category);
+    }
+}
+
+function showRecipeDetails(recipeId) {
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
             const recipe = data.recipes.find(r => r.id === recipeId);
             if (recipe) {
-                document.getElementById('day-plan').style.display = 'none';
-                const recipesSection = document.getElementById('recipes');
-                recipesSection.style.display = 'block';
-                
+                openTab('recipes');
                 const recipeDetails = document.getElementById('recipe-details');
                 recipeDetails.innerHTML = `
                     <div class="recipe-details">
@@ -90,11 +100,6 @@ function showRecipe(recipeId, event) {
                         <p>Kalorien: ${recipe.kalorien} (abnehmfreundlich)</p>
                     </div>
                 `;
-                
-                document.getElementById('back-to-day').onclick = () => {
-                    recipesSection.style.display = 'none';
-                    document.getElementById('day-plan').style.display = 'block';
-                };
             }
         });
 }
