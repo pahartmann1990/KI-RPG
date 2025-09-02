@@ -30,8 +30,8 @@ function showWeek(week) {
     week.days.forEach(day => {
         const row = `<tr>
             <td>${day.tag}</td>
-            <td><a href="#" onclick="showRecipe('${day.mittag.id}')">${day.mittag.name}</a></td>
-            <td><a href="#" onclick="showRecipe('${day.abend.id}')">${day.abend.name}</a></td>
+            <td><a href="#" onclick="showRecipe('${day.mittag.id}', event)">${day.mittag.name}</a></td>
+            <td><a href="#" onclick="showRecipe('${day.abend.id}', event)">${day.abend.name}</a></td>
         </tr>`;
         dayDetails.innerHTML += row;
     });
@@ -70,8 +70,8 @@ function showShopping(shopping) {
     };
 }
 
-function showRecipe(recipeId) {
-    // Hier Daten aus data.json laden und Rezept anzeigen
+function showRecipe(recipeId, event) {
+    event.preventDefault(); // Verhindert Standard-Link-Verhalten
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
@@ -83,10 +83,12 @@ function showRecipe(recipeId) {
                 
                 const recipeDetails = document.getElementById('recipe-details');
                 recipeDetails.innerHTML = `
-                    <h3>${recipe.name}</h3>
-                    <p>Zutaten: ${recipe.zutaten.join(', ')}</p>
-                    <p>Schritte: ${recipe.schritte}</p>
-                    <p>Kalorien: ${recipe.kalorien} (abnehmfreundlich)</p>
+                    <div class="recipe-details">
+                        <h3>${recipe.name}</h3>
+                        <p>Zutaten: ${recipe.zutaten.join(', ')}</p>
+                        <p>Schritte: ${recipe.schritte}</p>
+                        <p>Kalorien: ${recipe.kalorien} (abnehmfreundlich)</p>
+                    </div>
                 `;
                 
                 document.getElementById('back-to-day').onclick = () => {
