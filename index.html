@@ -13,30 +13,25 @@
         <p>Günstig (unter 25 €/Woche), abnehmfreundlich, ohne Frühstück. Mittags: Einfach & vorbereitbar (Mini-Ofen ok). Wochenende: Flexibel.</p>
     </header>
     
-    <section id="calendar">
+    <div class="tabs">
+        <button class="tab-button active" onclick="openTab('calendar')">Monatsübersicht</button>
+        <button class="tab-button" onclick="openTab('shopping')">Einkaufslisten</button>
+        <button class="tab-button" onclick="openTab('recipes')">Rezepte</button>
+    </div>
+
+    <section id="calendar" class="tab-content active">
         <h2>Monatsübersicht</h2>
-        <div id="month-view">
-            <!-- Hier wird der Kalender dynamisch eingefügt (z.B. Wochen-Buttons) -->
-        </div>
+        <div id="month-view"></div>
     </section>
-    
-    <section id="day-plan" style="display: none;">
-        <h2>Tagesplan</h2>
-        <div id="day-details"></div>
-        <button id="back-to-calendar">Zurück zum Kalender</button>
-    </section>
-    
-    <section id="shopping-list" style="display: none;">
-        <h2>Einkaufsliste</h2>
+
+    <section id="shopping" class="tab-content">
+        <h2>Einkaufslisten</h2>
         <div id="shopping-details"></div>
-        <p>Gesamtkosten: <span id="total-cost"></span> € (mit Puffer unter 25 €)</p>
-        <button id="back-to-day">Zurück</button>
     </section>
-    
-    <section id="recipes" style="display: none;">
+
+    <section id="recipes" class="tab-content">
         <h2>Rezepte</h2>
         <div id="recipe-details"></div>
-        <button id="back-to-day">Zurück</button>
     </section>
     
     <script src="script.js"></script>
